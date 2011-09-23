@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("StatsD")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("StatsD client library for .NET")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("StatsD")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("Ragnar Dahlén")]
+[assembly: AssemblyProduct("StatsD.NET")]
+[assembly: AssemblyCopyright("Copyright © Ragnar Dahlén")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
