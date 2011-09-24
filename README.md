@@ -13,10 +13,10 @@ using(var client = new StatsClient("localhost", 8125, "foo.bar"))
     client.Incremenet("counter1"); // sends 'foo.bar.counter1:1|c'
 
     // Increment a counter by 42
-    client.Incremenet("counter2", 42); // sends 'foo.bar.counter2:1|c'
+    client.Incremenet("counter2", 42); // sends 'foo.bar.counter2:42|c'
 
     // Decrement a counter by 5, sampled every 1/10th time
-    client.Decrement("counter3", 5, 0.1); // sends 'foo.bar.counter3:-1|c@0.1
+    client.Decrement("counter3", 5, 0.1); // sends 'foo.bar.counter3:-5|c@0.1
 
     // Report that the blahonga operation took 42 ms
     client.Timing("blahonga", 42); // sends 'foo.bar.blahonga:42|ms'
@@ -30,6 +30,11 @@ and reports the duration of service operation invocations.
 
 To use the behavior, first register it as an behavior extension, then use
 it in suitable endpointBehaviors.
+
+The behavior will time all service operation invocations, sending metrics on
+the form `KeyPrefix.ContractName.OperationName`.
+
+Example configuration:
 
 ```xml
 <system.serviceModel>
@@ -49,3 +54,9 @@ it in suitable endpointBehaviors.
     </behaviors>
 </system.serviceModel>   
 ```
+
+The `OperationTimingEndpointBehaviorExtensionElement` has three attributes:
+
+* `hostname` (**required**): address to StatsD instance
+* `port` (_optional_, default is 8125): the port StatsD is listening on
+* `keyPrefix` (_optional_, default is none): namespace to prefix keys with
