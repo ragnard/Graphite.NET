@@ -48,7 +48,7 @@ Example configuration:
 	<behaviors>
       <endpointBehaviors>
         <behavior name="...">
-          <operationTiming hostname="..." port="..." keyPrefix="..." />
+          <timeOperations hostname="..." port="..." keyPrefix="..." />
         </behavior>
       </endpointBehaviors>
     </behaviors>
