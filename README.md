@@ -1,13 +1,43 @@
-# StatsD.NET
+# Graphite.NET
 
-A simple [StatsD](https://github.com/etsy/statsd) client library for .NET, 
+A simple [Graphite](http://graphite.wikidot.com/) client library for .NET, 
 including a WCF behavior for measuring duration of service operation calls.
 
-## Usage
+A client for [StatsD](https://github.com/etsy/statsd/) is also included.
+
+## Graphite
+
+### Usage
 
 ```csharp
+// Import namespace
+using Graphite;
+
+// ...
+
 // Create a client for sending metrics to "localhost:8125", prefixing all keys with "foo.bar"
-using(var client = new StatsClient("localhost", 8125, "foo.bar"))
+using(var client = new GraphiteUdpClient("localhost", 2003, "foo.bar"))
+{
+    // Report a metric
+    client.Send("foo.bar.baz", 93284928374);
+
+    // Report a metric specifying timestamp
+    client.Send("foo.bar.baz", 93284928374, DateTime.Now.AddSeconds(42));
+}
+```
+
+## StatsD
+
+### Usage
+
+```csharp
+// Import namespace
+using Graphite.StatsD;
+
+// ...
+
+// Create a client for sending metrics to "localhost:8125", prefixing all keys with "foo.bar"
+using(var client = new StatsDClient("localhost", 8125, "foo.bar"))
 {
     // Increment a counter
     client.Incremenet("counter1"); // sends 'foo.bar.counter1:1|c'
@@ -25,8 +55,10 @@ using(var client = new StatsClient("localhost", 8125, "foo.bar"))
 
 ## WCF endpoint behavior
 
-Also included with StatsD.NET is a WCF endpoint behavior that measures 
+Also included with Graphite.NET is a WCF endpoint behavior that measures 
 and reports the duration of service operation invocations.
+
+Currently only support for StatsD is implemented.
 
 To use the behavior, first register it as an behavior extension, then use
 it in suitable `endpointBehavior` elements.
