@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GraphiteTcpClient.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="IGraphiteClient.cs" />
     <Compile Include="PlaintextMessage.cs" />
