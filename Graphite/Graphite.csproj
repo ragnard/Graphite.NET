@@ -8,8 +8,8 @@
     <ProjectGuid>{77EACC5C-76B2-4E73-A2C7-95747C980305}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StatsD</RootNamespace>
-    <AssemblyName>StatsD</AssemblyName>
+    <RootNamespace>Graphite</RootNamespace>
+    <AssemblyName>Graphite</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,6 +47,7 @@
     <Compile Include="WCF\OperationTimingEndpointBehaviorExtensionElement.cs" />
     <Compile Include="WCF\OperationTimingCallContextInitializer.cs" />
     <Compile Include="WCF\OperationTimingEndpointBehavior.cs" />
+    <Compile Include="WCF\OperationTimingParamaterInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StatsD.nuspec" />

@@ -3,7 +3,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 
-namespace StatsD.WCF
+namespace Graphite.WCF
 {
     public class OperationTimingCallContextInitializer : ICallContextInitializer
     {

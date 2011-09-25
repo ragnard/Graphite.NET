@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("StatsD")]
-[assembly: AssemblyDescription("StatsD client library for .NET")]
+[assembly: AssemblyTitle("Graphite")]
+[assembly: AssemblyDescription("Graphite client library for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ragnar Dahlén")]
 [assembly: AssemblyProduct("StatsD.NET")]

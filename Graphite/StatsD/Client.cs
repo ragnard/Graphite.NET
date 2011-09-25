@@ -2,15 +2,15 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 
-namespace StatsD
+namespace Graphite.StatsD
 {
-    public class StatsClient : IDisposable
+    public class Client : IDisposable
     {
         private readonly string _keyPrefix;
         private readonly UdpClient _client;
         private readonly Random _random;
 
-        public StatsClient(string hostname, int port, string keyPrefix = null)
+        public Client(string hostname, int port, string keyPrefix = null)
         {
             _keyPrefix = keyPrefix;
             _client = new UdpClient(hostname, port);

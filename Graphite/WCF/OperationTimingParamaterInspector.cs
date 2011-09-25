@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.ServiceModel.Dispatcher;
 
-namespace StatsD.WCF
+namespace Graphite.WCF
 {
     public class OperationTimingParamaterInspector : IParameterInspector
     {
