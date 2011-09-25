@@ -17,7 +17,7 @@ namespace StatsD
             _random = new Random();
         }
 
-        public bool Timing(string key, int value, double sampleRate = 1.0)
+        public bool Timing(string key, long value, double sampleRate = 1.0)
         {
             return MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
         }
