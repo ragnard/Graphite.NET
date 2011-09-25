@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphite", "Graphite\Graphite.csproj", "{77EACC5C-76B2-4E73-A2C7-95747C980305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{000ABA33-15D9-4233-8907-2B0B76DE08CF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,16 +23,6 @@ Global
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|x86.ActiveCfg = Release|Any CPU
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Debug|x86.ActiveCfg = Debug|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Debug|x86.Build.0 = Debug|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Release|Any CPU.ActiveCfg = Release|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Release|Mixed Platforms.Build.0 = Release|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Release|x86.ActiveCfg = Release|x86
-		{000ABA33-15D9-4233-8907-2B0B76DE08CF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
