@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Graphite")]
-[assembly: AssemblyDescription("Graphite client library for .NET")]
+[assembly: AssemblyTitle("Graphite.NET")]
+[assembly: AssemblyDescription(".NET client library for Graphite")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ragnar Dahlén")]
-[assembly: AssemblyProduct("StatsD.NET")]
+[assembly: AssemblyProduct("Graphite.NET")]
 [assembly: AssemblyCopyright("Copyright © Ragnar Dahlén")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
