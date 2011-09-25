@@ -15,14 +15,14 @@ using Graphite;
 
 // ...
 
-// Create a client for sending metrics to "localhost:8125", prefixing all keys with "foo.bar"
+// Create an UDP client for sending metrics to "localhost:2003", prefixing all keys with "foo.bar"
 using(var client = new GraphiteUdpClient("localhost", 2003, "foo.bar"))
 {
     // Report a metric
-    client.Send("foo.bar.baz", 93284928374);
+    client.Send("baz", 93284928374);
 
     // Report a metric specifying timestamp
-    client.Send("foo.bar.baz", 93284928374, DateTime.Now.AddSeconds(42));
+    client.Send("baz", 93284928374, DateTime.Now.AddSeconds(42));
 }
 ```
 
@@ -73,7 +73,7 @@ Example configuration:
   <!-- Register behavior extension -->
     <extensions>
       <behaviorExtensions>
-        <add name="timeOperations" type="StatsD.WCF.OperationTimingEndpointBehaviorExtensionElement, StatsD" />
+        <add name="timeOperations" type="Graphite.WCF.OperationTimingEndpointBehaviorExtensionElement, Graphite" />
       </behaviorExtensions>
     </extensions>
 	<!-- Use the behavior where suitable -->
