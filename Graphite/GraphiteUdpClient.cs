@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using SystemUdpClient = System.Net.Sockets.UdpClient;
+using System.Net.Sockets;
 
 namespace Graphite
 {
@@ -10,7 +9,7 @@ namespace Graphite
         public int Port { get; private set; }
         public string KeyPrefix { get; private set; }
 
-        private readonly SystemUdpClient _udpClient;
+        private readonly UdpClient _udpClient;
 
         public GraphiteUdpClient(string hostname, int port = 2003, string keyPrefix = null)
         {
@@ -18,13 +17,23 @@ namespace Graphite
             Port = port;
             KeyPrefix = keyPrefix;
 
-            _udpClient = new SystemUdpClient(Hostname, Port);
+            _udpClient = new UdpClient(Hostname, Port);
+        }
+
+        public void Send(string path, int value)
+        {
+            Send(path, value, DateTime.Now);
         }
 
         public void Send(string path, int value, DateTime timeStamp)
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(KeyPrefix))
+                {
+                    path = KeyPrefix+ "." + path;
+                }
+                
                 var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
 
                 _udpClient.Send(message, message.Length);
