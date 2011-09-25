@@ -36,7 +36,9 @@ namespace Graphite.WCF
 
         protected override object CreateBehavior()
         {
-            return new OperationTimingEndpointBehavior(new StatsClient(Hostname, Port, KeyPrefix));
+            var client = new StatsD.StatsDClient(Hostname, Port, KeyPrefix);
+
+            return new OperationTimingEndpointBehavior(new StatsD.InvocationReporter(client));
         }
 
         public override Type BehaviorType

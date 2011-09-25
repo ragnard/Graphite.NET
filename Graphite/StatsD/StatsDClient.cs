@@ -4,16 +4,17 @@ using System.Text;
 
 namespace Graphite.StatsD
 {
-    public class Client : IDisposable
+    public class StatsDClient : IDisposable
     {
         private readonly string _keyPrefix;
         private readonly UdpClient _client;
         private readonly Random _random;
 
-        public Client(string hostname, int port, string keyPrefix = null)
+        public StatsDClient(string hostname, int port, string keyPrefix = null)
         {
             _keyPrefix = keyPrefix;
-            _client = new UdpClient(hostname, port);
+            _client = new UdpClient { ExclusiveAddressUse = false };
+            _client.Connect(hostname, port);
             _random = new Random();
         }
 
@@ -116,11 +117,9 @@ namespace Graphite.StatsD
                 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
-                // TODO: Better error logging?
-                Console.WriteLine("Exception: {0}", e);
-
+                // Suppress all exceptions for now
                 return false;
             }
         }

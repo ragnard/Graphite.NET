@@ -1,18 +1,19 @@
 using System.Diagnostics;
 using System.ServiceModel.Dispatcher;
+using Graphite.StatsD;
 
 namespace Graphite.WCF
 {
     public class OperationTimingParamaterInspector : IParameterInspector
     {
-        private readonly StatsClient _statsClient;
+        private readonly IInvocationReporter _invocationReporter;
         private readonly string _contractName;
 
         private Stopwatch _stopwatch;
 
-        public OperationTimingParamaterInspector(StatsClient statsClient, string contractName)
+        public OperationTimingParamaterInspector(IInvocationReporter invocationReporter, string contractName)
         {
-            _statsClient = statsClient;
+            _invocationReporter = invocationReporter;
             _contractName = contractName;
         }
 
@@ -26,7 +27,7 @@ namespace Graphite.WCF
         {
             _stopwatch.Stop();
 
-            _statsClient.Timing(string.Format("{0}.{1}", _contractName, operationName), 
+            _invocationReporter.Report(string.Format("{0}.{1}", _contractName, operationName),
                                 _stopwatch.ElapsedMilliseconds);
         }
     }

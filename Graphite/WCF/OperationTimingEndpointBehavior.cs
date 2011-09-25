@@ -1,16 +1,17 @@
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
+using Graphite.StatsD;
 
 namespace Graphite.WCF
 {
     public class OperationTimingEndpointBehavior : IEndpointBehavior
     {
-        private readonly StatsClient _client;
+        private readonly IInvocationReporter _invocationReporter;
 
-        public OperationTimingEndpointBehavior(StatsClient client)
+        public OperationTimingEndpointBehavior(IInvocationReporter invocationReporter)
         {
-            _client = client;
+            _invocationReporter = invocationReporter;
         }
 
         public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
@@ -22,7 +23,7 @@ namespace Graphite.WCF
             foreach(var operation in clientRuntime.Operations)
             {
                 operation.ParameterInspectors.Add(
-                    new OperationTimingParamaterInspector(_client, endpoint.Contract.Name));
+                    new OperationTimingParamaterInspector(_invocationReporter, endpoint.Contract.Name));
             }
         }
 
@@ -31,7 +32,7 @@ namespace Graphite.WCF
             foreach (var operation in endpointDispatcher.DispatchRuntime.Operations)
             {
                 operation.CallContextInitializers.Add(
-                    new OperationTimingCallContextInitializer(_client, operation.Name, endpoint.Contract.Name));
+                    new OperationTimingCallContextInitializer(_invocationReporter, operation.Name, endpoint.Contract.Name));
             }
         }
 
