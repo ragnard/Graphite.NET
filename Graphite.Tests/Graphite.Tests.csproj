@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{77EACC5C-76B2-4E73-A2C7-95747C980305}</ProjectGuid>
+    <ProjectGuid>{9BFE8283-395C-4318-B65F-8EB4497546A5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Graphite</RootNamespace>
-    <AssemblyName>Graphite</AssemblyName>
+    <RootNamespace>Graphite.Tests</RootNamespace>
+    <AssemblyName>Graphite.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,10 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,21 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GraphiteTcpClient.cs" />
-    <Compile Include="DateTimeExtensions.cs" />
-    <Compile Include="IGraphiteClient.cs" />
-    <Compile Include="PlaintextMessage.cs" />
-    <Compile Include="GraphiteUdpClient.cs" />
-    <Compile Include="Policy\ExceptionPolicy.cs" />
-    <Compile Include="Policy\TracingPolicy.cs" />
+    <Compile Include="ExceptionHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatsD\StatsDClient.cs" />
-    <Compile Include="StatsD\InvocationReporter.cs" />
-    <Compile Include="WCF\IInvocationReporter.cs" />
-    <Compile Include="WCF\OperationTimingEndpointBehaviorExtensionElement.cs" />
-    <Compile Include="WCF\OperationTimingCallContextInitializer.cs" />
-    <Compile Include="WCF\OperationTimingEndpointBehavior.cs" />
-    <Compile Include="WCF\OperationTimingParamaterInspector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Graphite\Graphite.csproj">
+      <Project>{77EACC5C-76B2-4E73-A2C7-95747C980305}</Project>
+      <Name>Graphite</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

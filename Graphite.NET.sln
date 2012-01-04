@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphite", "Graphite\Graphite.csproj", "{77EACC5C-76B2-4E73-A2C7-95747C980305}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphite.Tests", "Graphite.Tests\Graphite.Tests.csproj", "{9BFE8283-395C-4318-B65F-8EB4497546A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,16 @@ Global
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{77EACC5C-76B2-4E73-A2C7-95747C980305}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9BFE8283-395C-4318-B65F-8EB4497546A5}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
