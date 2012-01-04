@@ -31,7 +31,6 @@ namespace Graphite.Tests
 						finallyCalled++;
 						Debug.WriteLine(ex.ToString());
 						return swallowIt;
-						;
 						// I could retrow here...
 					});
 
