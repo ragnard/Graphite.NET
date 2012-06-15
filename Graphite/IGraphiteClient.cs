@@ -2,16 +2,16 @@ using System;
 
 namespace Graphite
 {
-    public interface IGraphiteClient
-    {
-        void Send(string path, int value, DateTime timeStamp);
-    }
+	public interface IGraphiteClient
+	{
+		void Send(string path, int value, DateTime timeStamp);
+	}
 
-    public static class IGraphiteClientExtensions
-    {
-        public static void Send(this IGraphiteClient self, string path, int value)
-        {
-            self.Send(path, value, DateTime.Now);
-        }
-    }
+	public static class IGraphiteClientExtensions
+	{
+		public static void Send(this IGraphiteClient self, string path, int value)
+		{
+			self.Send(path, value, DateTime.Now);
+		}
+	}
 }

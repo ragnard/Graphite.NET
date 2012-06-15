@@ -1,147 +1,153 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using Graphite.Policy;
 
 namespace Graphite.StatsD
 {
-    public class StatsDClient : IDisposable
-    {
-        private readonly string _keyPrefix;
-        private readonly UdpClient _client;
-        private readonly Random _random;
+	public class StatsDClient : IDisposable, StatisticsClient
+	{
+		readonly UdpClient _client;
+		readonly string _keyPrefix;
+		readonly ExceptionPolicy _policy;
+		readonly Random _random;
 
-        public StatsDClient(string hostname, int port, string keyPrefix = null)
-        {
-            _keyPrefix = keyPrefix;
-            _client = new UdpClient { ExclusiveAddressUse = false };
-            _client.Connect(hostname, port);
-            _random = new Random();
-        }
+		public StatsDClient(string hostname, uint port = 8125u, string keyPrefix = null, ExceptionPolicy policy = null)
+		{
+			_keyPrefix = keyPrefix;
+			_policy = policy ?? TracingPolicy.Default;
+			_client = new UdpClient {ExclusiveAddressUse = false};
+			_client.Connect(hostname, (int)port);
+			_random = new Random();
+		}
 
-        public bool Timing(string key, long value, double sampleRate = 1.0)
-        {
-            return MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
-        }
+		public void Timing(string key, long value, double sampleRate = 1.0)
+		{
+			MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
+		}
 
-        public bool Decrement(string key, int magnitude = -1, double sampleRate = 1.0)
-        {
-            magnitude = magnitude < 0 ? magnitude : -magnitude;
-            return Increment(key, magnitude, sampleRate);
-        }
+		public void Decrement(string key, int magnitude = -1, double sampleRate = 1.0)
+		{
+			magnitude = magnitude < 0 ? magnitude : -magnitude;
+			Increment(key, magnitude, sampleRate);
+		}
 
-        public bool Decrement(params string[] keys)
-        {
-            return Increment(-1, 1.0, keys);
-        }
+		public void Decrement(params string[] keys)
+		{
+			Increment(-1, 1.0, keys);
+		}
 
-        public bool Decrement(int magnitude, params string[] keys)
-        {
-            magnitude = magnitude < 0 ? magnitude : -magnitude;
-            return Increment(magnitude, 1.0, keys);
-        }
+		public void Decrement(int magnitude, params string[] keys)
+		{
+			magnitude = magnitude < 0 ? magnitude : -magnitude;
+			
+			Increment(magnitude, 1.0, keys);
+		}
 
-        public bool Decrement(int magnitude, double sampleRate, params string[] keys)
-        {
-            magnitude = magnitude < 0 ? magnitude : -magnitude;
-            return Increment(magnitude, sampleRate, keys);
-        }
+		public void Decrement(int magnitude, double sampleRate, params string[] keys)
+		{
+			magnitude = magnitude < 0 ? magnitude : -magnitude;
+			
+			Increment(magnitude, sampleRate, keys);
+		}
 
-        public bool Increment(string key, int magnitude = 1, double sampleRate = 1.0)
-        {
-            var stat = string.Format("{0}:{1}|c", key, magnitude);
-            return MaybeSend(stat, sampleRate);
-        }
+		public void Increment(string key, int magnitude = 1, double sampleRate = 1.0)
+		{
+			string stat = string.Format("{0}:{1}|c", key, magnitude);
+			
+			MaybeSend(stat, sampleRate);
+		}
 
-        public bool Increment(int magnitude, double sampleRate, params string[] keys)
-        {
-            var stats = new string[keys.Length];
+		public void Increment(int magnitude, double sampleRate, params string[] keys)
+		{
+			var stats = new string[keys.Length];
 
-            for (var i = 0; i < keys.Length; i++)
-            {
-                stats[i] = string.Format("{0}:{1}|c", keys[i], magnitude);
-            }
-            return MaybeSend(sampleRate, stats);
-        }
+			for (int i = 0; i < keys.Length; i++)
+			{
+				stats[i] = string.Format("{0}:{1}|c", keys[i], magnitude);
+			}
+			
+			MaybeSend(sampleRate, stats);
+		}
 
-        private bool MaybeSend(string stat, double sampleRate)
-        {
-            return MaybeSend(sampleRate, stat);
-        }
+		bool MaybeSend(string stat, double sampleRate)
+		{
+			return MaybeSend(sampleRate, stat);
+		}
 
-        private bool MaybeSend(double sampleRate, params string[] stats)
-        {
-            // only return true if we sent something
-            var retval = false; 
+		bool MaybeSend(double sampleRate, params string[] stats)
+		{
+			// only return true if we sent something
+			bool retval = false;
 
-            if (sampleRate < 1.0)
-            {
-                foreach (var stat in stats)
-                {
-                    if (_random.NextDouble() <= sampleRate)
-                    {
-                        var sampledStat = string.Format("{0}|@{1}", stat, sampleRate);
-                        
-                        if (Send(sampledStat))
-                        {
-                            retval = true;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (var stat in stats)
-                {
-                    if (Send(stat))
-                    {
-                        retval = true;
-                    }
-                }
-            }
+			if (sampleRate < 1.0)
+			{
+				foreach (string stat in stats)
+				{
+					if (_random.NextDouble() <= sampleRate)
+					{
+						string sampledStat = string.Format("{0}|@{1}", stat, sampleRate);
 
-            return retval;
-        }
+						if (Send(sampledStat))
+						{
+							retval = true;
+						}
+					}
+				}
+			}
+			else
+			{
+				foreach (string stat in stats)
+				{
+					if (Send(stat))
+					{
+						retval = true;
+					}
+				}
+			}
 
-        private bool Send(string message)
-        {
-            try
-            {
-                if(!string.IsNullOrWhiteSpace(_keyPrefix))
-                {
-                    message = _keyPrefix + "." + message;
-                }
+			return retval;
+		}
 
-                var data = Encoding.UTF8.GetBytes(message);
+		bool Send(string message)
+		{
+			return _policy.Do(() =>
+				{
+#if NET35
+					if (!string.IsNullOrEmpty(_keyPrefix))
+#else
+					if (!string.IsNullOrWhiteSpace(_keyPrefix))
+#endif
+					{
+						message = _keyPrefix + "." + message;
+					}
 
-                _client.Send(data, data.Length);
-                
-                return true;
-            }
-            catch
-            {
-                // Suppress all exceptions for now
-                return false;
-            }
-        }
+					byte[] data = Encoding.UTF8.GetBytes(message);
 
-        #region IDisposable
+					_client.Send(data, data.Length);
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+					return true;
+				});
+		}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing) return;
+		#region IDisposable
 
-            if (_client != null)
-            {
-                _client.Close();
-            }
-        }
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 
-        #endregion
-    }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposing) return;
+
+			if (_client != null)
+			{
+				_client.Close();
+			}
+		}
+
+		#endregion
+	}
 }

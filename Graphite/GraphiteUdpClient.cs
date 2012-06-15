@@ -1,62 +1,67 @@
 ﻿using System;
 using System.Net.Sockets;
+using Graphite.Policy;
 
 namespace Graphite
 {
-    public class GraphiteUdpClient : IGraphiteClient, IDisposable
-    {
-        public string Hostname { get; private set; }
-        public int Port { get; private set; }
-        public string KeyPrefix { get; private set; }
+	/// <summary>
+	/// Graphite UDP client. Have a look at
+	/// http://graphite.wikidot.com/getting-your-data-into-graphite
+	/// for details
+	/// </summary>
+	public class GraphiteUdpClient : IGraphiteClient, IDisposable
+	{
+		readonly ExceptionPolicy _policy;
+		readonly UdpClient _udpClient;
 
-        private readonly UdpClient _udpClient;
+		public GraphiteUdpClient(string hostname, int port = 2003, string keyPrefix = null, ExceptionPolicy policy = null)
+		{
+			_policy = policy ?? TracingPolicy.Default;
 
-        public GraphiteUdpClient(string hostname, int port = 2003, string keyPrefix = null)
-        {
-            Hostname = hostname;
-            Port = port;
-            KeyPrefix = keyPrefix;
+			Hostname = hostname;
+			Port = port;
+			KeyPrefix = keyPrefix;
 
-            _udpClient = new UdpClient(Hostname, Port);
-        }
+			_udpClient = new UdpClient(Hostname, Port);
+		}
 
-        public void Send(string path, int value, DateTime timeStamp)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(KeyPrefix))
-                {
-                    path = KeyPrefix+ "." + path;
-                }
-                
-                var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
+		public string Hostname { get; private set; }
+		public int Port { get; private set; }
+		public string KeyPrefix { get; private set; }
 
-                _udpClient.Send(message, message.Length);
-            }
-            catch
-            {
-                // Supress all exceptions for now.
-            }
-        }
+		public void Send(string path, int value, DateTime timeStamp)
+		{
+			_policy.Do(() =>
+				{
+#if NET35
+					if (!string.IsNullOrEmpty(KeyPrefix))
+#else
+					if (!string.IsNullOrWhiteSpace(KeyPrefix))
+#endif
+					{
+						path = KeyPrefix + "." + path;
+					}
 
-        #region IDisposable
+					byte[] message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+					_udpClient.Send(message, message.Length);
+				});
+		}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing) return;
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 
-            if (_udpClient != null)
-            {
-                _udpClient.Close();
-            }
-        }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposing) return;
 
-        #endregion
-    }
+			if (_udpClient != null)
+			{
+				_udpClient.Close();
+			}
+		}
+	}
 }
