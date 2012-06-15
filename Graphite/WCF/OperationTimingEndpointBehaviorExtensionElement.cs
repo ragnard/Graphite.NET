@@ -14,9 +14,9 @@ namespace Graphite.WCF
 		}
 
 		[ConfigurationProperty("port", DefaultValue = 8125)]
-		public int Port
+		public uint Port
 		{
-			get { return (int) base["port"]; }
+			get { return (uint) base["port"]; }
 		}
 
 		[ConfigurationProperty("keyPrefix")]

@@ -5,57 +5,60 @@ using Graphite.Policy;
 
 namespace Graphite.StatsD
 {
-	public class StatsDClient : IDisposable
+	public class StatsDClient : IDisposable, StatisticsClient
 	{
 		readonly UdpClient _client;
 		readonly string _keyPrefix;
 		readonly ExceptionPolicy _policy;
 		readonly Random _random;
 
-		public StatsDClient(string hostname, int port, string keyPrefix = null, ExceptionPolicy policy = null)
+		public StatsDClient(string hostname, uint port = 8125u, string keyPrefix = null, ExceptionPolicy policy = null)
 		{
 			_keyPrefix = keyPrefix;
 			_policy = policy ?? TracingPolicy.Default;
 			_client = new UdpClient {ExclusiveAddressUse = false};
-			_client.Connect(hostname, port);
+			_client.Connect(hostname, (int)port);
 			_random = new Random();
 		}
 
-		public bool Timing(string key, long value, double sampleRate = 1.0)
+		public void Timing(string key, long value, double sampleRate = 1.0)
 		{
-			return MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
+			MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
 		}
 
-		public bool Decrement(string key, int magnitude = -1, double sampleRate = 1.0)
-		{
-			magnitude = magnitude < 0 ? magnitude : -magnitude;
-			return Increment(key, magnitude, sampleRate);
-		}
-
-		public bool Decrement(params string[] keys)
-		{
-			return Increment(-1, 1.0, keys);
-		}
-
-		public bool Decrement(int magnitude, params string[] keys)
+		public void Decrement(string key, int magnitude = -1, double sampleRate = 1.0)
 		{
 			magnitude = magnitude < 0 ? magnitude : -magnitude;
-			return Increment(magnitude, 1.0, keys);
+			Increment(key, magnitude, sampleRate);
 		}
 
-		public bool Decrement(int magnitude, double sampleRate, params string[] keys)
+		public void Decrement(params string[] keys)
+		{
+			Increment(-1, 1.0, keys);
+		}
+
+		public void Decrement(int magnitude, params string[] keys)
 		{
 			magnitude = magnitude < 0 ? magnitude : -magnitude;
-			return Increment(magnitude, sampleRate, keys);
+			
+			Increment(magnitude, 1.0, keys);
 		}
 
-		public bool Increment(string key, int magnitude = 1, double sampleRate = 1.0)
+		public void Decrement(int magnitude, double sampleRate, params string[] keys)
+		{
+			magnitude = magnitude < 0 ? magnitude : -magnitude;
+			
+			Increment(magnitude, sampleRate, keys);
+		}
+
+		public void Increment(string key, int magnitude = 1, double sampleRate = 1.0)
 		{
 			string stat = string.Format("{0}:{1}|c", key, magnitude);
-			return MaybeSend(stat, sampleRate);
+			
+			MaybeSend(stat, sampleRate);
 		}
 
-		public bool Increment(int magnitude, double sampleRate, params string[] keys)
+		public void Increment(int magnitude, double sampleRate, params string[] keys)
 		{
 			var stats = new string[keys.Length];
 
@@ -63,7 +66,8 @@ namespace Graphite.StatsD
 			{
 				stats[i] = string.Format("{0}:{1}|c", keys[i], magnitude);
 			}
-			return MaybeSend(sampleRate, stats);
+			
+			MaybeSend(sampleRate, stats);
 		}
 
 		bool MaybeSend(string stat, double sampleRate)
@@ -120,11 +124,8 @@ namespace Graphite.StatsD
 
 					byte[] data = Encoding.UTF8.GetBytes(message);
 
-					try { _client.Send(data, data.Length); }
-					catch (Exception)
-					{
-						return false;
-					}
+					_client.Send(data, data.Length);
+
 					return true;
 				});
 		}
