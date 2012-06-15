@@ -107,28 +107,26 @@ namespace Graphite.StatsD
 
 		bool Send(string message)
 		{
-			try
-			{
+			return _policy.Do(() =>
+				{
 #if NET35
-				if (!string.IsNullOrEmpty(_keyPrefix))
+					if (!string.IsNullOrEmpty(_keyPrefix))
 #else
 					if (!string.IsNullOrWhiteSpace(_keyPrefix))
 #endif
-				{
-					message = _keyPrefix + "." + message;
-				}
+					{
+						message = _keyPrefix + "." + message;
+					}
 
-				byte[] data = Encoding.UTF8.GetBytes(message);
+					byte[] data = Encoding.UTF8.GetBytes(message);
 
-				_client.Send(data, data.Length);
-
-				return true;
-			}
-			catch
-			{
-				// Suppress all exceptions for now
-				return false;
-			}
+					try { _client.Send(data, data.Length); }
+					catch (Exception)
+					{
+						return false;
+					}
+					return true;
+				});
 		}
 
 		#region IDisposable
