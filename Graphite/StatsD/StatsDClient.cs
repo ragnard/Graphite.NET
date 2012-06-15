@@ -109,7 +109,11 @@ namespace Graphite.StatsD
 		{
 			try
 			{
-				if (!string.IsNullOrWhiteSpace(_keyPrefix))
+#if NET35
+				if (!string.IsNullOrEmpty(_keyPrefix))
+#else
+					if (!string.IsNullOrWhiteSpace(_keyPrefix))
+#endif
 				{
 					message = _keyPrefix + "." + message;
 				}

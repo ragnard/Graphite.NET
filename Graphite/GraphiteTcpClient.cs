@@ -34,7 +34,11 @@ namespace Graphite
 		{
 			_policy.Do(() =>
 				{
+#if NET35
+					if (!string.IsNullOrEmpty(KeyPrefix))
+#else
 					if (!string.IsNullOrWhiteSpace(KeyPrefix))
+#endif
 					{
 						path = KeyPrefix + "." + path;
 					}
