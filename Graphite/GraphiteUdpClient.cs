@@ -38,7 +38,6 @@ namespace Graphite
 #else
 					if (!string.IsNullOrWhiteSpace(KeyPrefix))
 #endif
-
 					{
 						path = KeyPrefix + "." + path;
 					}
