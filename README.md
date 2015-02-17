@@ -5,6 +5,11 @@ including a WCF behavior for measuring duration of service operation calls.
 
 A client for [StatsD](https://github.com/etsy/statsd/) is also included.
 
+Install via NuGet:
+```
+Install-Package Graphite.NET
+```
+
 ## Graphite
 
 ### Usage
