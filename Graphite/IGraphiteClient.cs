@@ -4,7 +4,7 @@ namespace Graphite
 {
     public interface IGraphiteClient
     {
-        void Send(string path, int value, DateTime timeStamp);
+        void Send(string path, double value, DateTime timeStamp);
     }
 
     public static class IGraphiteClientExtensions

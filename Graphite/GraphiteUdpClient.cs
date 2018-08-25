@@ -20,7 +20,7 @@ namespace Graphite
             _udpClient = new UdpClient(Hostname, Port);
         }
 
-        public void Send(string path, int value, DateTime timeStamp)
+        public void Send(string path, double value, DateTime timeStamp)
         {
             try
             {
